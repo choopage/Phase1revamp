@@ -28,15 +28,29 @@ function createTable() {
   });
 }
 
-function insertData(information, callback){
+function insertData(information, callback) {
   let i = 1;
-  const template = information.map(information => `($${i++}, $${i++}, $${i++}, $${i++}, $${i++})`).join(', ');
-  const values = information.reduce((reduced, information) => [...reduced, information.availabilityid, information.participantid, information.meetingid, information.startTime, information.endTime], [])
-  const query = `INSERT INTO information (availabilityid, participantid, meetingid, startTime, endTime) VALUES ${template};`;
+  const template = information.map(_info => `($${i++}, $${i++}, $${i++}, $${i++}, $${i++})`).join(',');
+  const values = information.reduce((reduced, _info) => [...reduced, _info['availabilityId'], _info['meetingId'], _info['participantId'], _info['startTime'], _info['endTime']], [])
+  const query = `INSERT INTO information (availabilityId, meetingId, participantId, startTime, endTime) VALUES ${template};`;
+
+  console.log('Check point 1 for Jia Xi', values, query)
+
   const client = connect()
-  client.query(query, values, (err, result)=> {
-callback(err, result)
+  client.query(query, values, (err, result) => {
+    callback(err, result)
     client.end
+  });
+
+}
+
+function selectAllData(callback) {
+  const query = `SELECT * FROM information`;
+
+  const client = connect();
+  client.query(query, (err, result) => {
+    callback(err, result);
+    client.end();
   });
 
 }
@@ -83,7 +97,8 @@ function getData(availabilityid, participantid, meetingid, startTime, endTime, p
 module.exports = {
   createTable,
   insertData,
-  getData,
+  selectAllData,
+  // getData,
 };
 /*
 DROP TABLE IF EXISTS information

@@ -14,36 +14,39 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// cors init
+const cors = require('cors')
+app.use(cors())
+
 
 app.post('/basic/insert', function (req, res, next) {
-    const {data} = req.body;
-    database.insertData(data, (error, result) => {
-        if (error) {
-            return next(error)
-        }
-        console.log(result);
-        res.json(data);
-    });
-    res.json(data)
+    const arrayJson = (req && req.body && req.body.data) ? req.body.data : [];
+    if (arrayJson.length === 0) {
+        res.send('/basic/insert - Unsuccessful - Bad Request 300')
+    } else {
+        arrayJson.forEach(element => console.log(element))
+        database.insertData(arrayJson, (error, result) => {
+            if (error) {
+                res.send('/basic/insert - Error')
+                return next(error)
+            } else {
+                console.log('/basic/insert - Result', result)
+                res.send('/basic/insert - OK 200')
+            }
+        })
+    }
 })
 
 app.get('/basic/data', function (req, res, next) {
-    const {availabilityid, participantid, meetingid, startTime, endTime, page, pageSize} = req.query
-    database.getData(availabilityid, participantid, meetingid, startTime, endTime, page, pageSize, (error, result) => {
+    database.selectAllData((error, result) => {
         if (error) {
-            return next(error);
+            res.send('/basic/data Error')
+            return next(error)
+        } else {
+            console.log('/basic/data - Result', result)
+            res.json(result)
         }
-        res.json(result);
-    })
-    res.json({
-        availabilityid,
-        participantid,
-        meetingid,
-        startTime,
-        endTime,
-        page,
-        pageSize
-    })
+    });
 })
 
 
