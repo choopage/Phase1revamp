@@ -24,7 +24,7 @@ function createTable() {
     `;
   client.query(query, (err, res) => {
     console.log(err, res);
-    client.close();
+    client.end();
   });
 }
 
@@ -36,7 +36,7 @@ function insertData(information, callback){
   const client = connect()
   client.query(query, values, (err, result)=> {
 callback(err, result)
-    client.close
+    client.end
   });
 
 }

@@ -23,14 +23,14 @@ Content-Type: application/json
             "meetingid": 300,
             "startTime": 1400,
             "endTime": 1600
-        }
+        },
         {
             "availabilityid": 110,
             "participantid": 410,
             "meetingid": 200,
             "startTime": 1200,
             "endTime": 1500
-        },
+        }
     ]
 }
 
@@ -48,9 +48,4 @@ Content-Type: application/json
 ###
 //this is all the thing inside
 GET http://localhost:3000/basic/data?availabilityid=220&participantid=220&meetingid=300&startTime=1400&endTime=1600&page=1&pageSize=1 HTTP/1.1
-Content-Type: application/json
-
-###
-//this is all the thing inside
-GET http://localhost:3000/basic/viewall HTTP/1.1
 Content-Type: application/json
