@@ -38,7 +38,8 @@ app.post('/basic/insert', function (req, res, next) {
 })
 
 app.get('/basic/data', function (req, res, next) {
-    database.selectAllData((error, result) => {
+    const { meetingId, participantId } = req.query;
+    database.selectAllData(meetingId, participantId, (error, result) => {
         if (error) {
             res.send('/basic/data Error')
             return next(error)
