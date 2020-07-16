@@ -44,8 +44,15 @@ function insertData(information, callback) {
 
 }
 
-function selectAllData(callback) {
-  const query = `SELECT * FROM information`;
+function selectAllData(meetingId, participantId, callback) {
+  let query = `SELECT * FROM information`;
+  if (meetingId && participantId) {
+      query = `SELECT * FROM information WHERE meetingId = '${meetingId}' AND participantId ='${participantId}'`;
+  } else if (meetingId) {
+      query = `SELECT * FROM information WHERE meetingId = '${meetingId}'`;
+  } else if (participantId) {
+      query = `SELECT * FROM information WHERE participantId ='${participantId}'`;
+  }
 
   const client = connect();
   client.query(query, (err, result) => {
@@ -71,22 +78,22 @@ function getData(availabilityid, participantid, meetingid, startTime, endTime, p
       whereClause += participantid ? ` AND meetingid = $${i++}` : `meetingid = $${i++}`;
       values.push(parseInt((meetingid)))
     }
- 
- 
+
+
   }
-  
+
 
   let limitOffsetClause = `LIMIT $${i++} OFFSET $${i++}`
   values.push(parseInt(pageSize))
   values.push(parseInt(page) * parseInt(pageSize))
-  
+
   const query = `SELECT * From information ${whereClause} ${limitOffsetClause} `
-  
+
   const client = connect()
   client.query(query, values,function(err,result){
     callback(err, result)
     client.end()
-    
+
   })
     // console.log(query, values)
 }
